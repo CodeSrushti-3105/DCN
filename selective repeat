@@ -1,0 +1,42 @@
+#include<iostream>
+#include<ctime>
+using namespace std;
+
+void selectiveRepeat(int frames, int windowSize){
+    bool ack[frames] = {false};
+    srand(time(0));
+    int sent = 0;
+
+    while(sent < frames){
+        // Send frames in window
+        for(int i = sent; i < sent + windowSize && i < frames; i++){
+            if(!ack[i]){
+                cout << "Sending frame: " << i << endl;
+                // Randomly simulate loss
+                if(rand() % 2 == 0){
+                    cout << "ACK received for frame " << i << endl;
+                    ack[i] = true;
+                } else {
+                    cout << "ACK lost for frame " << i << endl;
+                }
+            }
+        }
+
+        // Slide window
+        while(ack[sent] && sent < frames){
+            sent++;
+        }
+    }
+    cout << "All frames sent successfully!" << endl;
+}
+
+int main(){
+    int frames, windowSize;
+    cout << "Enter number of frames: ";
+    cin >> frames;
+    cout << "Enter window size: ";
+    cin >> windowSize;
+
+    selectiveRepeat(frames, windowSize);
+    return 0;
+}
